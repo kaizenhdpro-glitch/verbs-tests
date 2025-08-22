@@ -1,0 +1,419 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+    
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اختبار الأفعال الإنجليزية</title>
+    <!-- تضمين خط Baloo Bhaijaan 2 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- تضمين Tailwind CSS من CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js for sound generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+      /* تخصيص الخط الرئيسي */
+      body {
+        font-family: "Baloo Bhaijaan 2", sans-serif;
+        background-color: #e6f2ff;
+      }
+      /* إخفاء شريط التمرير الأفقي على الأجهزة الصغيرة */
+      body::-webkit-scrollbar {
+        width: 0.5rem;
+      }
+      .option.correct {
+        background-color: #64b5f6 !important;
+        border-color: #388e3c !important;
+        color: white !important;
+      }
+      .option.incorrect {
+        background-color: #ff6a6a !important;
+        border-color: #d32f2f !important;
+        color: white !important;
+      }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+      .incorrect-animation {
+        animation: shake 0.5s ease-in-out;
+      }
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+      .correct-animation {
+        animation: bounce 0.5s ease-in-out;
+      }
+      @keyframes flyUpAndFade {
+        0% { transform: scale(1) translateY(0); opacity: 1; }
+        100% { transform: scale(1.5) translateY(-100px); opacity: 0; }
+      }
+      .star-animation {
+        animation: flyUpAndFade 1s forwards;
+        position: absolute;
+        font-size: 50px;
+        z-index: 100;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col items-center min-h-screen p-4 bg-gray-100">
+    <!-- Header -->
+    <div class="header w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white p-4 shadow-md flex justify-center items-center border-b-4 border-yellow-400">
+        <h1 class="text-xl md:text-2xl font-extrabold text-center flex items-center gap-2">
+            <img src="kaizen-logo.png" alt="شعار مدرسة كايزن" class="h-10 w-10">
+            <div class="flex flex-col items-center">
+                <span>مدرسة كايزن للتعليم واللغات</span>
+                <span>حاسي الدلاعة</span>
+            </div>
+            <img src="kaizen-logo.png" alt="شعار مدرسة كايزن" class="h-10 w-10">
+        </h1>
+    </div>
+
+    <!-- بطاقة التطبيق الرئيسية -->
+    <div id="quizCard" class="card bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-lg w-full mt-8 flex flex-col min-h-[500px] animate-fadeIn">
+        <!-- المحتوى سيتم إدراجه هنا بواسطة JavaScript -->
+    </div>
+
+    <script type="module">
+      // البيانات الأساسية للاختبار - بعد حذف "begin" وإضافة "move"
+      const quizData = [
+        { word: "try", correctOption: "يحاول" },
+        { word: "ask", correctOption: "يسأل" },
+        { word: "need", correctOption: "يحتاج" },
+        { word: "feel", correctOption: "يشعر" },
+        { word: "become", correctOption: "يصبح" },
+        { word: "leave", correctOption: "يغادر/يترك" },
+        { word: "put", correctOption: "يضع" },
+        { word: "mean", correctOption: "يعني" },
+        { word: "keep", correctOption: "يحافظ على" },
+        { word: "let", correctOption: "يسمح" },
+        { word: "start", correctOption: "يبدأ" },
+        { word: "seem", correctOption: "يبدو" },
+        { word: "help", correctOption: "يساعد" },
+        { word: "talk", correctOption: "يتحدث" },
+        { word: "turn", correctOption: "يستدير/يحول" },
+        { word: "show", correctOption: "يعرض/يُظهر" },
+        { word: "hear", correctOption: "يسمع" },
+        { word: "play", correctOption: "يلعب" },
+        { word: "run", correctOption: "يركض" },
+        { word: "move", correctOption: "يتحرك" } // ✅ تم الإضافة
+      ];
+
+      // إعداد مكتبة الصوت Tone.js
+      const correctSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+      const incorrectSynth = new Tone.Synth().toDestination();
+
+      // متغيرات الحالة
+      let shuffledQuizData;
+      let index = 0;
+      let score = 0;
+      let time = 15;
+      let timer;
+      let startTime;
+      let totalSeconds = 0;
+      let studentName = "";
+
+      // دالة لتوزيع عناصر المصفوفة بشكل عشوائي
+      function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
+
+      // عرض شاشة البداية
+      function showStartScreen() {
+        document.getElementById("quizCard").innerHTML = `
+          <div class="start-screen text-center p-8 flex-grow">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-blue-600 mb-4">أهلاً بك في اختبار الأفعال 2</h2>
+            <p class="text-lg text-gray-700 mb-6">الرجاء إدخال اسمك للبدء:</p>
+            <input type="text" id="nameInput" placeholder="أدخل اسمك هنا..." autofocus class="w-full md:w-4/5 p-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-200" />
+            <button id="startButton" class="btn bg-blue-600 text-white py-3 px-6 text-xl font-bold rounded-xl mt-6 shadow-lg hover:bg-blue-700 transition-transform duration-200 hover:scale-105">بدء الاختبار</button>
+          </div>
+        `;
+        document.getElementById("startButton").addEventListener("click", startGame);
+      }
+
+      // بدء اللعبة
+      async function startGame() {
+        await Tone.start();
+        const nameInput = document.getElementById("nameInput");
+        studentName = nameInput.value.trim();
+        if (studentName === "") {
+          const card = document.getElementById("quizCard");
+          const message = document.createElement("div");
+          message.textContent = "الرجاء إدخال اسمك للمتابعة.";
+          message.className = "text-red-500 mt-2";
+          card.querySelector('.start-screen').appendChild(message);
+          return;
+        }
+        startQuiz();
+      }
+
+      // بدء الاختبار
+      function startQuiz() {
+        // اختيار 20 فعلًا عشوائيًا
+        shuffledQuizData = shuffle([...quizData]).slice(0, 20);
+        startTime = Date.now();
+        index = 0;
+        score = 0;
+        // إنشاء هيكل السؤال الثابت مرة واحدة لتحسين الأداء
+        const quizCard = document.getElementById("quizCard");
+        quizCard.innerHTML = `
+          <div class="flex justify-between items-center text-lg md:text-xl font-bold text-blue-600 mb-4">
+            <div>سؤال <span id="questionNumber"></span> / ${shuffledQuizData.length}</div>
+            <div>⏳ <span id="time"></span> ث</div>
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full mb-4 overflow-hidden">
+            <div id="timerFill" class="h-full bg-yellow-400 transition-all duration-1000 linear" style="width:100%"></div>
+          </div>
+          <div id="questionWord" class="question-word text-4xl md:text-5xl font-extrabold text-blue-600 text-center my-6"></div>
+          <div id="optionsContainer" class="flex flex-col flex-grow justify-center">
+            ${Array(4).fill(0).map((_, i) => `<button id="option-${i}" class="option block w-full p-4 md:p-3 my-2 text-3xl font-bold text-gray-800 border-4 border-blue-500 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg"></button>`).join("")}
+          </div>
+        `;
+        // استخدام Event Delegation للتعامل مع النقر على الخيارات
+        document.getElementById("optionsContainer").addEventListener('click', handleOptionClick);
+        updateQuestionContent();
+      }
+
+      // دالة لتحديث محتوى السؤال
+      function updateQuestionContent() {
+        if (index >= shuffledQuizData.length) {
+          showResult();
+          return;
+        }
+
+        const currentQuestion = shuffledQuizData[index];
+        const correctWord = currentQuestion.word;
+        
+        const otherOptions = quizData.filter((q) => q.word !== correctWord);
+        const shuffledOtherOptions = shuffle([...otherOptions]);
+        const incorrectWords = shuffledOtherOptions.slice(0, 3).map(q => q.word);
+
+        const allWords = [...incorrectWords, correctWord];
+        const shuffledAllWords = shuffle(allWords);
+
+        // تحديث محتوى العناصر بدلاً من إعادة إنشائها
+        document.getElementById("questionNumber").textContent = index + 1;
+        document.getElementById("questionWord").textContent = currentQuestion.correctOption;
+        
+        const optionButtons = document.querySelectorAll(".option");
+        optionButtons.forEach((button, i) => {
+          button.textContent = shuffledAllWords[i];
+          button.classList.remove("correct", "incorrect");
+          button.disabled = false;
+        });
+        
+        startTimer();
+      }
+
+      // بدء المؤقت
+      function startTimer() {
+        clearInterval(timer);
+        let t = time;
+        document.getElementById("time").textContent = t;
+        document.getElementById("timerFill").style.width = (t / time) * 100 + "%";
+        
+        timer = setInterval(() => {
+          t--;
+          document.getElementById("time").textContent = t;
+          document.getElementById("timerFill").style.width = (t / time) * 100 + "%";
+          if (t <= 0) {
+            clearInterval(timer);
+            index++;
+            updateQuestionContent();
+          }
+        }, 1000);
+      }
+      
+      // دالة التعامل مع النقر على الخيار
+      function handleOptionClick(event) {
+        const button = event.target;
+        if (!button.classList.contains('option')) return;
+
+        clearInterval(timer);
+        const selectedOption = button.textContent;
+        const correctWord = shuffledQuizData[index].word;
+
+        const btns = document.querySelectorAll(".option");
+        btns.forEach((b) => {
+          if (b.textContent === correctWord) b.classList.add("correct");
+          else if (b.textContent === selectedOption) b.classList.add("incorrect");
+          b.disabled = true;
+        });
+
+        if (selectedOption === correctWord) {
+          score++;
+          correctSynth.triggerAttackRelease(["C4", "E4", "G4"], "8n");
+          document.getElementById("quizCard").classList.add("correct-animation");
+          createStar(button);
+        } else {
+          incorrectSynth.triggerAttackRelease("C3", "8n");
+          document.getElementById("quizCard").classList.add("incorrect-animation");
+        }
+
+        setTimeout(() => {
+          document.getElementById("quizCard").classList.remove("correct-animation", "incorrect-animation");
+          index++;
+          updateQuestionContent();
+        }, 1000);
+      }
+
+      // إنشاء نجمة متحركة
+      function createStar(sourceElement) {
+        const star = document.createElement('div');
+        star.className = 'star-animation';
+        star.innerHTML = '⭐';
+        
+        const rect = sourceElement.getBoundingClientRect();
+        star.style.left = `${rect.left + rect.width / 2}px`;
+        star.style.top = `${rect.top + rect.height / 2}px`;
+
+        document.body.appendChild(star);
+        
+        setTimeout(() => {
+          star.remove();
+        }, 1000);
+      }
+
+      // عرض لوحة النتائج النهائية
+      function showResult() {
+        totalSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        
+        // حفظ النتيجة الحالية مع الوقت
+        const currentResult = { name: studentName, score: score, totalSeconds: totalSeconds };
+        let allScores = JSON.parse(localStorage.getItem('topScores')) || [];
+        allScores.push(currentResult);
+        
+        // ترتيب النتائج: بالدرجة (تنازلي)، ثم الوقت (تصاعدي)
+        allScores.sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          return a.totalSeconds - b.totalSeconds;
+        });
+        
+        // الاحتفاظ بأفضل 3 نتائج فقط
+        const top5Scores = allScores.slice(0, 3);
+        localStorage.setItem('topScores', JSON.stringify(top5Scores));
+        
+        // تحديد الرسالة التشجيعية حسب النسبة
+        let encouragementMessage = "";
+        const total = shuffledQuizData.length;
+        const percentage = (score / total) * 100;
+
+        if (percentage === 100) {
+          encouragementMessage = "عمل ممتاز ! استمر في هذا المستوى";
+        } else if (percentage >= 70) {
+          encouragementMessage = "عمل رائع ! حاول مجددا";
+        } else if (percentage >= 50) {
+          encouragementMessage = "عمل جيد ! استمر في المحاولة";
+        } else {
+          encouragementMessage = "كل خطأ هو فرصة للتعلم, حاول مجددا";
+        }
+
+        // ✅ تغيير لون الرسالة إلى الأحمر
+        const encouragementHTML = `<p class="encouragement text-center text-lg md:text-xl font-bold text-red-600 mt-4 leading-relaxed px-4">${encouragementMessage}</p>`;
+
+        let topScoresHTML = `<div class="mt-6 w-full"><h3 class="text-xl font-extrabold text-blue-600 mb-3 text-center">🏆 أفضل 3 نتائج</h3><ul class="space-y-2">`;
+        top5Scores.forEach((entry, i) => {
+          const medals = ['🥇', '🥈', '🥉'];
+          const medal = medals[i] || '';
+          const isCurrentUser = entry.name === studentName && entry.score === score && entry.totalSeconds === totalSeconds;
+          const rowClass = isCurrentUser ? 'bg-yellow-100 border-r-4 border-yellow-500 px-2 py-1 rounded' : 'bg-gray-50 px-2 py-1 rounded';
+
+          const entryMinutes = Math.floor(entry.totalSeconds / 60);
+          const entrySeconds = entry.totalSeconds % 60;
+          const timeString = `${entryMinutes} دقيقة و ${entrySeconds} ثانية`;
+
+          topScoresHTML += `<li class="flex justify-between items-center ${rowClass}">
+                                 <span class="font-bold">${medal} ${entry.name}</span>
+                                 <div class="text-left">
+                                   <span class="text-lg font-bold text-blue-500">${entry.score}</span>
+                                   <span class="text-sm text-gray-500 whitespace-nowrap">(${timeString})</span>
+                                 </div>
+                               </li>`;
+        });
+        topScoresHTML += '</ul></div>';
+
+        document.getElementById("quizCard").innerHTML = `
+          <div class="result text-center font-extrabold text-4xl md:text-5xl text-blue-600 mb-4">🎉 تهانينا يا ${studentName}!</div>
+          <div class="result-time text-center text-2xl text-gray-700">نتيجتك: <span class="font-bold">${score}</span> من <span class="font-bold">${shuffledQuizData.length}</span></div>
+          ${encouragementHTML}
+          ${topScoresHTML}
+          <button class="btn bg-blue-600 text-white py-3 px-6 text-xl font-bold rounded-xl mt-6 shadow-lg hover:bg-blue-700 transition-transform duration-200 hover:scale-105 mx-auto block">
+            إعادة المحاولة
+          </button>
+          <a href="https://kaizenhdpro-glitch.github.io/verbs-tests/" 
+             class="btn bg-gradient-to-r from-yellow-50 to-yellow-100 text-gray-800 py-3 px-6 text-xl font-bold rounded-xl mt-4 shadow-md border border-yellow-200 hover:from-yellow-100 hover:to-yellow-200 transition-all duration-300 transform hover:scale-105 mx-auto block">
+            العودة إلى الصفحة الرئيسية
+          </a>
+        `;
+        document.querySelector(".btn").addEventListener("click", () => location.reload());
+      }
+      
+      // بدء التطبيق عند تحميل الصفحة
+      window.onload = () => {
+        showStartScreen();
+      };
+    </script>
+  </body>
+</html>
+
+
+    
+              <script>
+                              const quizData = [
+  { word: "try", correctOption: "يحاول" },
+  { word: "ask", correctOption: "يسأل" },
+  { word: "need", correctOption: "يحتاج" },
+  { word: "feel", correctOption: "يشعر" },
+  { word: "become", correctOption: "يصبح" },
+  { word: "leave", correctOption: "يغادر/يترك" },
+  { word: "put", correctOption: "يضع" },
+  { word: "mean", correctOption: "يعني" },
+  { word: "keep", correctOption: "يحافظ على" },
+  { word: "let", correctOption: "يسمح" },
+  { word: "start", correctOption: "يبدأ" }, // تم حذف "begin" وترك "start"
+  { word: "seem", correctOption: "يبدو" },
+  { word: "help", correctOption: "يساعد" },
+  { word: "talk", correctOption: "يتحدث" },
+  { word: "turn", correctOption: "يستدير/يحول" },
+  { word: "show", correctOption: "يعرض/يُظهر" },
+  { word: "hear", correctOption: "يسمع" },
+  { word: "play", correctOption: "يلعب" },
+  { word: "run", correctOption: "يركض" },
+  { word: "move", correctOption: "يتحرك" } // ✅ إضافة "move" كعنصر جديد
+];
+
+
+              </script>
+                        </body>
+                        </html>
+                    

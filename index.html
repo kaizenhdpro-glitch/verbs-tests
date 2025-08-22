@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اختبار الأفعال - مدرسة كايزن</title>
+    <!-- تضمين خط Baloo Bhaijaan 2 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* تنسيق الصفحة */
+      body {
+        font-family: "Baloo Bhaijaan 2", sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #e0f7fa, #f3e5f5);
+        color: #1a202c;
+        text-align: center;
+      }
+
+      /* الهيدر */
+      header {
+        padding: 1.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .logo {
+        height: 70px;
+        width: 70px;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .school-name {
+        font-size: 1.8rem;
+        margin: 0;
+        color: #1e40af;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .school-location {
+        font-size: 1rem;
+        margin: 0;
+        color: #6b7280;
+      }
+
+      .school-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+
+      @media (min-width: 480px) {
+        .school-info {
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin: 1rem 0;
+        color: #1e40af;
+      }
+
+      @media (max-width: 480px) {
+        h2 {
+          font-size: 1.6rem;
+        }
+      }
+
+      p.subtitle {
+        font-size: 1.3rem;
+        margin: 0.8rem 0 1.5rem;
+        color: #6b7280;
+        font-weight: bold;
+      }
+
+      /* مربعات المستويات - مع أرقام بحجم 2.4rem */
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .level-btn {
+        background: white;
+        border: 2px solid #fbbf24;
+        border-radius: 12px;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #1e40af;
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        padding: 0;
+      }
+
+      .level-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        border-color: #f59e0b;
+      }
+
+      .circle {
+        display: block;
+        width: 52px;
+        height: 52px;
+        background: white;
+        border: 3px solid #fbbf24;
+        border-radius: 50%;
+        line-height: 52px;
+        text-align: center;
+        font-size: 2.4rem;
+        font-weight: bold;
+        color: #fbbf24;
+        margin: 0.3rem 0;
+      }
+
+      .level-text {
+        font-size: 1.1rem;
+        margin: 0;
+        color: #1e40af;
+        font-weight: bold;
+      }
+
+      /* رسالة تحفيزية */
+      .encouragement {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1e40af;
+        background: #ffffff;
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        max-width: 500px;
+        margin: 1.5rem auto;
+      }
+
+      /* تذييل الصفحة */
+      footer {
+        margin-top: 2rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+        padding-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- الهيدر -->
+    <header>
+      <div class="logo-container">
+        <img src="kaizen-logo.png" alt="شعار مدرسة كايزن" class="logo">
+        <div class="school-info">
+          <h1 class="school-name">مدرسة كايزن</h1>
+          <p class="school-location">حاسي الدلاعة</p>
+        </div>
+        <img src="kaizen-logo.png" alt="شعار مدرسة كايزن" class="logo">
+      </div>
+      <h2>اختبار الأفعال الإنجليزية</h2>
+      <p class="subtitle">اختر المستوى الذي ترغب في بدئه</p>
+    </header>
+
+    <!-- مربعات المستويات -->
+    <div class="container">
+      <a href="verbs-test-1.html" class="level-btn">
+        <span class="circle">1</span>
+        <span class="level-text">المستوى</span>
+      </a>
+      <a href="verbs-test-2.html" class="level-btn">
+        <span class="circle">2</span>
+        <span class="level-text">المستوى</span>
+      </a>
+      <a href="verbs-test-3.html" class="level-btn">
+        <span class="circle">3</span>
+        <span class="level-text">المستوى</span>
+      </a>
+      <a href="verbs-test-4.html" class="level-btn">
+        <span class="circle">4</span>
+        <span class="level-text">المستوى</span>
+      </a>
+      <a href="verbs-test-5.html" class="level-btn">
+        <span class="circle">5</span>
+        <span class="level-text">المستوى</span>
+      </a>
+      <a href="verbs-test-6.html" class="level-btn">
+        <span class="circle">6</span>
+        <span class="level-text">المستوى</span>
+      </a>
+    </div>
+
+    <!-- رسالة تحفيزية -->
+    <p class="encouragement">كل مستوى يحتوي على 20 فعلًا جديدًا 💪 ابدأ رحلتك الآن!</p>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+      &copy; 2025 مدرسة كايزن للتعليم واللغات - حاسي الدلاعة
+    </footer>
+
+  </body>
+</html>
